@@ -6,7 +6,7 @@ import { repo } from '../../storage/repo';
 import { navigate } from '../../app/router';
 import { useEditor } from '../../app/stores';
 import { Length } from '../common/LengthInput';
-import { pickFile, useImageUrl } from '../common/images';
+import { decorplanAccept, pickFile, useImageUrl } from '../common/images';
 import { alertDialog, confirmDialog, promptDialog, toast, withErrorAlert } from '../common/ui';
 import { exportProjectFile, importProjectFile } from './io';
 import { NewProjectDialog } from './NewProjectDialog';
@@ -33,7 +33,7 @@ export function ProjectListScreen() {
   }, [refresh]);
 
   const doImport = async () => {
-    const file = await pickFile('.decorplan,application/zip');
+    const file = await pickFile(decorplanAccept());
     if (!file) return;
     try {
       const p = await importProjectFile(file);

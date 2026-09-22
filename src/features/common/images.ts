@@ -127,12 +127,22 @@ export function safeFilename(name: string): string {
   return name.replace(/[\\/:*?"<>|]+/g, '_').trim() || 'project';
 }
 
+/** iOS/iPadOS greys out files whose type it cannot map from `accept` (e.g. `.decorplan`). */
+export function isIOS(): boolean {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+/** Accept filter for .decorplan files; none on iOS (the file is validated on import instead). */
+export function decorplanAccept(): string {
+  return isIOS() ? '' : '.decorplan,application/zip';
+}
+
 /** Open a native file picker. */
 export function pickFile(accept: string, capture = false): Promise<File | null> {
   return new Promise((resolve) => {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = accept;
+    if (accept) input.accept = accept;
     if (capture) input.setAttribute('capture', 'environment');
     input.onchange = () => resolve(input.files?.[0] ?? null);
     input.oncancel = () => resolve(null);
