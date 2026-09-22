@@ -1,0 +1,53 @@
+schema: spec-driven
+
+context: |
+  Product: Decor Planner - plan picture/decor compositions on a real wall, in scale,
+  and export a mounting map with nail coordinates for hanging them in real life.
+  Audience: personal use first; possible public release later (keep the door open,
+  but do not build accounts, backend or monetization yet).
+  Platform: Progressive Web App (installable, works offline), responsive and
+  touch-friendly - photos are often taken on a phone, composing/exporting may
+  happen on desktop. Local-first: no backend, no accounts.
+  Tech stack: Vite + React + TypeScript; Konva (react-konva) for the editor canvas;
+  own 4-point homography solve (no OpenCV) for perspective correction;
+  Dexie (IndexedDB) for storage; fflate/JSZip for .decorplan archives;
+  pdf-lib or jsPDF for PDF export; vite-plugin-pwa for offline/installability.
+  Domain conventions:
+    - All lengths are stored internally as millimetres (numbers). Pixels are a
+      view concern only; never persist pixel geometry as source of truth.
+    - UI displays/accepts metric (mm, cm default, m) or imperial (in, ft-in with
+      fractions to 1/16") via a single shared parse/format layer.
+    - Wall coordinate origin is bottom-left of the wall (floor + left corner).
+    - Pieces are modelled by their outer frame dimensions only (W x H).
+    - v1 supports exactly one wall per project.
+
+# Project context (optional)
+# This is shown to AI when creating artifacts.
+# Add your tech stack, conventions, style guides, domain knowledge, etc.
+# Example:
+#   context: |
+#     Tech stack: TypeScript, React, Node.js
+#     We use conventional commits
+#     Domain: e-commerce platform
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
