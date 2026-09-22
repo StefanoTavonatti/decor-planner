@@ -12,7 +12,9 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "dev:lan": "vite --host 0.0.0.0",
+    "preview:lan": "vite build && vite preview --host 0.0.0.0"
   },
   "dependencies": {
     "dexie": "^4.4.6",
