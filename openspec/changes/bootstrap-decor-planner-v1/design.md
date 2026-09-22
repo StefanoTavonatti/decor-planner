@@ -48,9 +48,9 @@ src/
 Piece      { id, name, widthMm, heightMm, imageId?, color?, hanging: { type: 1|2, offsetTopMm, spacingMm? }, createdAt, updatedAt }
 Project    { id, name, wall: Wall, placements: Placement[], obstacles: Obstacle[], eyeLevelMm, createdAt, updatedAt, lastExportedAt? }
 Wall       { widthMm, heightMm, source: 'blank' | { originalImageId, rectifiedImageId, corners: [4× {x,y} in source px] } }
-Placement  { id, pieceId, xMm, yMm /* bottom-left of outer frame */, z, locked }
+Placement  { id, pieceId, xMm, yMm /* bottom-left of outer frame */, locked }   // z-order = array order
 Obstacle   { id, name, xMm, yMm, widthMm, heightMm }
-Blob store { id, blob, mime, width, height }
+Image store { id, bytes: ArrayBuffer, mime, width, height }   // ArrayBuffer: more robust than Blob in IndexedDB (Safari)
 Settings   { units: 'mm'|'cm'|'m'|'imperial', paper: 'A4'|'Letter', snapping: boolean }
 ```
 Pieces live in a global library and are referenced by id from placements; editing a piece updates every project using it (it is the same physical object).
@@ -73,6 +73,8 @@ Zip containing `manifest.json` (`{ format: "decorplan", formatVersion: 1, appVer
 
 ### D11. Images
 On import, images are decoded with EXIF orientation applied and downscaled to ≤ 3000 px long edge, stored as JPEG (quality ~0.9) Blobs. Rectified outputs are stored separately; originals kept for re-rectification.
+
+Flat images (scans, already-straight photos) use the same 4-corner editor with handles starting near the image edges, so "crop" and "straighten" are one tool.
 
 ### D12. PDF layout
 Landscape A4/Letter. Top: title, date, scale. Middle: vector drawing of wall outline, obstacles (hatched), piece outlines numbered, nail crosshairs, dimension lines from the floor and the left edge to each nail. Bottom/next page: nail table. The wall photo as faded background is optional (default off). Scale = largest standard ratio (1:10, 1:20, 1:25, 1:50…) that fits.
