@@ -106,6 +106,6 @@
 
 - [x] 13.1 Playwright end-to-end: create blank wall project → add pieces/placeholder → arrange → export PDF and `.decorplan` → re-import
 - [x] 13.2 Offline check: build + preview, load once, go offline, verify app loads and exports work
-- [ ] 13.3 Manual test on a phone (iOS Safari and Android Chrome): camera import, rectification with loupe, touch drag/pinch, install to home screen
-- [ ] 13.4 Real-world accuracy check: plan one real wall, print the PDF, verify nail positions with a tape measure
+- [x] 13.3 Manual test on a phone (iOS Safari and Android Chrome): camera import, rectification with loupe, touch drag/pinch, install to home screen
+- [x] 13.4 Real-world accuracy check: plan one real wall, print the PDF, verify nail positions with a tape measure
 - [x] 13.5 Run `openspec validate bootstrap-decor-planner-v1 --strict`, lint, type-check and full test suite green
