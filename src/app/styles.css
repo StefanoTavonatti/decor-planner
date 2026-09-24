@@ -1234,3 +1234,36 @@ h1 {
 .field .segmented {
   align-self: flex-start;
 }
+
+/* ------------------------------------------------ drag and drop */
+
+.drop-zone {
+  position: relative;
+}
+
+.drop-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  border: 2px dashed var(--accent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface) 82%, var(--accent));
+  color: var(--accent);
+  font-weight: 600;
+  text-align: center;
+  padding: 1rem;
+  pointer-events: none;
+}
+
+.drag-hint {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+@media (pointer: coarse) {
+  .drag-hint {
+    display: none;
+  }
+}

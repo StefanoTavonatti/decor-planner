@@ -18,11 +18,15 @@ export function wallFromRectify(r: RectifyResult): Wall {
 export function useWallPhotoFlow(onWall: (w: Wall) => void, current?: Wall) {
   const [editing, setEditing] = useState<{ imageId: string; reedit: boolean } | null>(null);
 
-  const pickPhoto = async (camera: boolean) => {
-    const file = await pickFile('image/*', camera);
-    if (!file) return;
+  /** Import a photo (picked or dropped) and open the corner editor. */
+  const startWithFile = async (file: File) => {
     const img = await withErrorAlert('Could not open the image', () => importImageFile(file));
     if (img) setEditing({ imageId: img.id, reedit: false });
+  };
+
+  const pickPhoto = async (camera: boolean) => {
+    const file = await pickFile('image/*', camera);
+    if (file) await startWithFile(file);
   };
 
   const reStraighten = () => {
@@ -46,5 +50,5 @@ export function useWallPhotoFlow(onWall: (w: Wall) => void, current?: Wall) {
     />
   ) : null;
 
-  return { pickPhoto, reStraighten, editor };
+  return { pickPhoto, startWithFile, reStraighten, editor };
 }
