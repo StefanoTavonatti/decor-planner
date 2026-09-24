@@ -5,6 +5,7 @@ import { repo } from '../../storage/repo';
 import { useLibrary } from '../../app/stores';
 import { LengthInput } from '../common/LengthInput';
 import { importImageFile, pickFile } from '../common/images';
+import { DropZone } from '../common/DropZone';
 import { confirmDialog, Modal, withErrorAlert } from '../common/ui';
 import { RectifyEditor } from '../rectify/RectifyEditor';
 import { HangingEditor } from './HangingEditor';
@@ -13,12 +14,27 @@ import { PieceThumb } from './PieceThumb';
 type Draft = Omit<Piece, 'widthMm' | 'heightMm'> & { widthMm?: number; heightMm?: number };
 
 /** Create or edit a piece: name, outer size, image, hanging points. */
-export function PieceEditor({ piece, onClose, onSaved }: { piece?: Piece; onClose(): void; onSaved?(p: Piece): void }) {
+export function PieceEditor({
+  piece,
+  onClose,
+  onSaved,
+}: {
+  piece?: Piece;
+  onClose(): void;
+  onSaved?(p: Piece): void;
+}) {
   const [draft, setDraft] = useState<Draft>(
-    () => piece ?? { ...createPiece({ name: '', widthMm: 0, heightMm: 0 }), widthMm: undefined, heightMm: undefined },
+    () =>
+      piece ?? {
+        ...createPiece({ name: '', widthMm: 0, heightMm: 0 }),
+        widthMm: undefined,
+        heightMm: undefined,
+      },
   );
   const [usage, setUsage] = useState(0);
-  const [rectify, setRectify] = useState<{ imageId: string; mode: 'inset' | 'full'; reedit: boolean } | null>(null);
+  const [rectify, setRectify] = useState<{ imageId: string; mode: 'inset' | 'full'; reedit: boolean } | null>(
+    null,
+  );
   const save = useLibrary((s) => s.save);
   const remove = useLibrary((s) => s.remove);
 
@@ -31,11 +47,15 @@ export function PieceEditor({ piece, onClose, onSaved }: { piece?: Piece; onClos
   const hangingError = hasSize ? validateHanging(draft.hanging, draft.widthMm!, draft.heightMm!) : null;
   const canSave = hasSize && draft.name.trim() !== '' && !hangingError;
 
-  const choose = async (camera: boolean, mode: 'inset' | 'full') => {
-    const file = await pickFile('image/*', camera);
-    if (!file) return;
+  /** Import a picked or dropped image and open the corner editor. */
+  const startWithFile = async (file: File, mode: 'inset' | 'full') => {
     const img = await withErrorAlert('Could not open the image', () => importImageFile(file));
     if (img) setRectify({ imageId: img.id, mode, reedit: false });
+  };
+
+  const choose = async (camera: boolean, mode: 'inset' | 'full') => {
+    const file = await pickFile('image/*', camera);
+    if (file) await startWithFile(file, mode);
   };
 
   const doSave = async () => {
@@ -90,7 +110,12 @@ export function PieceEditor({ piece, onClose, onSaved }: { piece?: Piece; onClos
             Used in {usage} project{usage === 1 ? '' : 's'} — changes apply everywhere.
           </p>
         )}
-        <div className="piece-editor">
+        <DropZone
+          className="piece-editor"
+          message="Drop an image of the piece"
+          disabled={rectify !== null}
+          onImage={(f) => void startWithFile(f, 'full')}
+        >
           <div className="piece-editor-image">
             {hasSize ? (
               <PieceThumb piece={draft as Piece} maxSize={160} />
@@ -112,23 +137,33 @@ export function PieceEditor({ piece, onClose, onSaved }: { piece?: Piece; onClos
               {draft.imageSource && (
                 <button
                   className="btn btn-small"
-                  onClick={() => setRectify({ imageId: draft.imageSource!.originalImageId, mode: 'full', reedit: true })}
+                  onClick={() =>
+                    setRectify({ imageId: draft.imageSource!.originalImageId, mode: 'full', reedit: true })
+                  }
                 >
                   Adjust corners
                 </button>
               )}
               {draft.imageId && (
-                <button className="btn btn-small" onClick={() => set({ imageId: undefined, imageSource: undefined })}>
+                <button
+                  className="btn btn-small"
+                  onClick={() => set({ imageId: undefined, imageSource: undefined })}
+                >
                   Remove image
                 </button>
               )}
+              <span className="drag-hint">or drag an image here</span>
             </div>
           </div>
           <div className="piece-editor-fields">
             <label className="field">
               <span className="field-label">Name *</span>
               <span className="field-input">
-                <input value={draft.name} onChange={(e) => set({ name: e.target.value })} placeholder="e.g. Harbour print" />
+                <input
+                  value={draft.name}
+                  onChange={(e) => set({ name: e.target.value })}
+                  placeholder="e.g. Harbour print"
+                />
               </span>
             </label>
             <div className="row-2">
@@ -175,7 +210,7 @@ export function PieceEditor({ piece, onClose, onSaved }: { piece?: Piece; onClos
               <p className="hint">Enter the size first.</p>
             )}
           </div>
-        </div>
+        </DropZone>
       </Modal>
       {rectify && (
         <RectifyEditor

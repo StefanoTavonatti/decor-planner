@@ -8,6 +8,7 @@ import { LibraryScreen } from '../features/library/LibraryScreen';
 import { ProjectListScreen } from '../features/projects/ProjectListScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { DialogHost, ToastHost } from '../features/common/ui';
+import { dragHasFiles } from '../features/common/fileDrop';
 import { routeHref, useRoute, type Route } from './router';
 import { flushAutosave, registerFlusher, useEditor, useLibrary, useSettings } from './stores';
 
@@ -34,6 +35,21 @@ export function App() {
 
   useEffect(() => {
     void startup().then(() => setReady(true));
+  }, []);
+
+  // A file dropped outside a drop zone would make the browser open it and leave the app.
+  useEffect(() => {
+    const block = (e: DragEvent) => {
+      if (!dragHasFiles(e.dataTransfer)) return;
+      e.preventDefault();
+      if (e.type === 'dragover' && e.dataTransfer) e.dataTransfer.dropEffect = 'none';
+    };
+    window.addEventListener('dragover', block);
+    window.addEventListener('drop', block);
+    return () => {
+      window.removeEventListener('dragover', block);
+      window.removeEventListener('drop', block);
+    };
   }, []);
 
   if (!ready) return <div className="splash">Decor Planner</div>;
