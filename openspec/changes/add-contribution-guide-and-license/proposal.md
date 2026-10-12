@@ -9,7 +9,7 @@ The repository is about to be made public. Right now it has no license (so nobod
   - **Every contribution goes through OpenSpec**: a pull request MUST contain an OpenSpec change (proposal, delta specs, design when needed, tasks) together with its implementation. Docs-only or tooling-only changes still use a change, marked `skip_specs: true`.
   - The expected loop: explore (optional) → propose → apply → archive, with the archived change and the synced main specs committed in the same PR (matching how existing work in this repo is done).
   - **AI-assisted contributions are welcome** when they use the OpenSpec workflow; the OpenSpec commands/skills already committed for Claude Code, Cursor, OpenCode and other agents can be used directly. The human opening the PR remains responsible for the result, and should mention which AI tool was used.
-  - Local setup and the checks a PR must pass before review (`npm run lint`, `npm run typecheck`, `npm test`, `npm run e2e`, `npm run build`, `openspec validate --strict`).
+  - Local setup and the checks a PR must pass before review (`npm run lint`, `npm run typecheck`, `npm test`, `npm run e2e`, `npm run build`, `openspec validate --all --strict`).
   - Project conventions contributors must respect (millimetres as internal unit, local-first / no backend, etc. — pointing to `openspec/config.yaml` and `openspec/specs/`).
   - That contributions are accepted under the project's MIT license.
 - Add a GitHub pull request template that reminds contributors of the OpenSpec checklist.

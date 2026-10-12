@@ -13,3 +13,11 @@ npm run build      # production build in dist/ (installable, offline)
 ```
 
 Planning docs live in `openspec/` (change `bootstrap-decor-planner-v1`).
+
+## Contributing
+
+Contributions are welcome, including AI-assisted ones. Every contribution must go through the [OpenSpec](https://github.com/Fission-AI/OpenSpec) workflow: each pull request includes an archived OpenSpec change. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[MIT](LICENSE) © 2026 Stefano Tavonatti

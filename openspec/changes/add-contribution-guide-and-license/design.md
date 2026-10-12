@@ -20,7 +20,7 @@ See proposal.md — Why. The repo already commits OpenSpec workflow files for se
 - **Archive inside the contributor's PR.** Keeps `openspec/specs/` consistent with `main` at every merge and matches existing history. Alternative (maintainer archives after merge) would leave stale active changes on `main`.
 - **Inbound = outbound licensing, no CLA/DCO.** A sentence in CONTRIBUTING.md is enough for an MIT hobby project and adds no friction.
 - **AI disclosure is requested, not policed.** A PR-template field ("AI tools used") gives reviewers context without gatekeeping. The human submitter is accountable.
-- **Guide lists the exact npm scripts** from `package.json` (`lint`, `typecheck`, `test`, `e2e`, `build`) plus `openspec validate --strict`, and notes that e2e needs `npx playwright install` once.
+- **Guide lists the exact npm scripts** from `package.json` (`lint`, `typecheck`, `test`, `e2e`, `build`) plus `openspec validate --all --strict`, and notes that e2e needs `npx playwright install` once.
 - **Conventions are referenced, not duplicated.** CONTRIBUTING.md summarises the key rules (mm internally, local-first, no backend) and points to `openspec/config.yaml` and `openspec/specs/` as authoritative, so the guide doesn't drift.
 
 ## Risks / Trade-offs

@@ -31,7 +31,7 @@ Every pull request SHALL include an OpenSpec change describing it (proposal, del
 
 #### Scenario: Feature contribution
 - **WHEN** a contributor opens a pull request adding or changing app behavior
-- **THEN** the pull request contains the archived OpenSpec change for it and the updated main specs, and `openspec validate --strict` passes
+- **THEN** the pull request contains the archived OpenSpec change for it and the updated main specs, and `openspec validate --all --strict` passes
 
 #### Scenario: Docs-only contribution
 - **WHEN** a contributor fixes a typo in the documentation
@@ -49,7 +49,7 @@ The contribution guide SHALL explicitly welcome contributions produced with AI c
 - **THEN** the guide tells them AI contributions are welcome, which OpenSpec commands to run (propose, apply, archive), and that they remain accountable for the submitted change
 
 ### Requirement: Pull request checklist
-The repository SHALL provide a pull request template that is pre-filled for every new pull request and lists the OpenSpec change name, whether AI tools were used, and checkboxes for: OpenSpec change included and archived, main specs synced, lint, typecheck, unit tests, end-to-end tests, build and `openspec validate --strict` passing.
+The repository SHALL provide a pull request template that is pre-filled for every new pull request and lists the OpenSpec change name, whether AI tools were used, and checkboxes for: OpenSpec change included and archived, main specs synced, lint, typecheck, unit tests, end-to-end tests, build and `openspec validate --all --strict` passing.
 
 #### Scenario: Opening a pull request
 - **WHEN** a contributor opens a new pull request on the hosting platform
