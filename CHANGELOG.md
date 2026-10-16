@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] 2026-10-16
+## [0.1.0] - 2026-10-16
 
 ### Added
 
@@ -22,4 +22,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automatic deployment to GitHub Pages when a `vX.Y.Z` release tag is pushed.
 - This changelog.
 
-[Unreleased]: https://github.com/StefanoTavonatti/decor-planner/commits/main
+[Unreleased]: https://github.com/StefanoTavonatti/decor-planner/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/StefanoTavonatti/decor-planner/releases/tag/v0.1.0
