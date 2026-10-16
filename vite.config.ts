@@ -4,6 +4,8 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  // Set by the GitHub Pages deploy workflow (e.g. '/decor-planner/'); '/' everywhere else.
+  base: process.env.BASE_PATH ?? '/',
   plugins: [
     react(),
     VitePWA({

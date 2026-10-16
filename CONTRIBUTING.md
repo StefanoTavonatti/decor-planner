@@ -90,6 +90,49 @@ openspec validate --all --strict
 
 Then fill in the pull request template. It includes the same checklist.
 
+## Changelog
+
+[`CHANGELOG.md`](CHANGELOG.md) follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). If your change is **user-visible** (a feature, a behavior change, a bug fix users would notice), add a line to the `## [Unreleased]` section under the right category:
+
+- `### Added` for new features
+- `### Changed` for changes in existing behavior
+- `### Deprecated` for features that will be removed
+- `### Removed` for removed features
+- `### Fixed` for bug fixes
+- `### Security` for vulnerability fixes
+
+Write it for users, not developers: say what changed for them, not which files moved. Internal-only changes (refactoring, tests, tooling, contributor docs) don't need an entry.
+
+## Releasing
+
+_This section is for maintainers._
+
+Releases follow [Semantic Versioning](https://semver.org/). Pushing a tag `vX.Y.Z` runs the [Deploy to GitHub Pages](.github/workflows/deploy-pages.yml) workflow, which checks the tag, runs lint, typecheck, unit and end-to-end tests, builds the app and publishes it to https://stefanotavonatti.github.io/decor-planner/.
+
+1. Pick the next version: MAJOR for incompatible changes (e.g. a `.decorplan` file older versions can't open), MINOR for new features, PATCH for fixes only.
+2. Update `package.json` (and the lockfile): `npm version X.Y.Z --no-git-tag-version`.
+3. In `CHANGELOG.md`, move the `[Unreleased]` entries into a new `## [X.Y.Z] - YYYY-MM-DD` section (today's date) and leave `## [Unreleased]` empty.
+4. Update the links at the bottom of `CHANGELOG.md`:
+   ```md
+   [Unreleased]: https://github.com/StefanoTavonatti/decor-planner/compare/vX.Y.Z...HEAD
+   [X.Y.Z]: https://github.com/StefanoTavonatti/decor-planner/compare/vPREVIOUS...vX.Y.Z
+   ```
+   For the first release, use `[X.Y.Z]: https://github.com/StefanoTavonatti/decor-planner/releases/tag/vX.Y.Z`.
+5. Merge these changes to `main` through a pull request, like any other change.
+6. Tag the merged commit on `main` and push the tag:
+   ```sh
+   git switch main && git pull
+   git tag vX.Y.Z
+   git push origin vX.Y.Z
+   ```
+
+The workflow fails, and nothing is published, if the tag doesn't match the `package.json` version or `CHANGELOG.md` has no section for it. Pre-release tags such as `v1.0.0-rc.1` are never published. To re-deploy an existing release (for example to roll back), open the workflow in the **Actions** tab, choose **Run workflow** and pick the tag under **Use workflow from**.
+
+One-time setup, already needed before the first release:
+
+- **Settings → Pages → Build and deployment → Source:** set it to **GitHub Actions**.
+- **Settings → Environments → github-pages → Deployment branches and tags:** allow tags matching `v*`, so deployments from release tags are accepted.
+
 ## Project conventions
 
 The full context is in [`openspec/config.yaml`](openspec/config.yaml) and the specs. The key points:

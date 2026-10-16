@@ -16,6 +16,7 @@ Change:
 
 - [ ] The OpenSpec change is included (proposal, delta specs or `skip_specs: true`, design if needed, tasks)
 - [ ] The change is archived and its delta specs are synced into `openspec/specs/`
+- [ ] `CHANGELOG.md` has an entry under `[Unreleased]` (or the change isn't user-visible)
 - [ ] `npm run lint` passes
 - [ ] `npm run typecheck` passes
 - [ ] `npm test` passes

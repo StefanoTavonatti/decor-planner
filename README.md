@@ -4,6 +4,8 @@ Plan picture compositions on a photo of your wall, in true scale, and export a m
 
 Local-first PWA (Vite + React + TypeScript). All data stays on the device; back up projects as `.decorplan` files.
 
+**Try it:** https://stefanotavonatti.github.io/decor-planner/ (latest release). See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
+
 ```sh
 npm install
 npm run dev        # http://localhost:5173

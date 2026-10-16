@@ -1,0 +1,111 @@
+# Publishes the app to GitHub Pages when a stable release tag (vMAJOR.MINOR.PATCH) is pushed.
+# Pre-release tags (e.g. v1.0.0-rc.1) don't match the filter and are never deployed.
+# To re-deploy an existing release, run this workflow manually and pick the tag in "Use workflow from".
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate release tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check tag, package.json version and changelog
+        env:
+          REF: ${{ github.ref }}
+        run: |
+          if [[ ! "$REF" =~ ^refs/tags/v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "::error::'$REF' is not a stable release tag (expected vMAJOR.MINOR.PATCH, e.g. v1.2.3)."
+            exit 1
+          fi
+          version="${REF#refs/tags/v}"
+
+          package_version="$(node -p "require('./package.json').version")"
+          if [[ "$package_version" != "$version" ]]; then
+            echo "::error::Tag v$version does not match package.json version $package_version. Bump package.json or fix the tag."
+            exit 1
+          fi
+
+          if ! grep -Eq "^## \[${version//./\\.}\] - [0-9]{4}-[0-9]{2}-[0-9]{2}$" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md has no '## [$version] - YYYY-MM-DD' section. Move the [Unreleased] entries into it before tagging."
+            exit 1
+          fi
+
+          echo "Releasing version $version"
+
+  verify:
+    name: Lint, typecheck and test
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+  build:
+    name: Build for GitHub Pages
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - uses: actions/configure-pages@v6
+
+      - run: npm ci
+
+      - run: npm run build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
